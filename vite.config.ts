@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import devServer from '@hono/vite-dev-server'
+import devServer, {defaultOptions} from '@hono/vite-dev-server'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,14 +14,12 @@ export default defineConfig({
     react(),
     devServer({
       entry: "server/server.ts",
-      exclude: [ // We need to override this option since the default setting doesn't fit
-          /.*\.tsx?($|\?)/,
-          /.*\.(s?css|less)($|\?)/,
-          /.*\.(svg|png)($|\?)/,
-          /^\/@.+$/,
-          /^\/favicon\.ico$/,
-          /^\/(public|assets|static)\/.+/,
-          /^\/node_modules\/.*/
+      exclude: [
+        /^\/app\/.+/,
+        // Exclude any files in /public/, as they will be served from /
+        /.*\.svg$/,
+        /.*\.png$/,
+        ...defaultOptions.exclude,
       ],
       injectClientScript: false, // This option is buggy, disable it and inject the code manually
   })
